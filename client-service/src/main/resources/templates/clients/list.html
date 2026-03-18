@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Gestion des Clients</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Clients</h1>
+        <a href="/clients/new" class="btn btn-primary">+ Nouveau client</a>
+    </div>
+
+    <table id="clients-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="client : ${clients}" th:attr="data-id=${client.id}">
+            <td th:text="${client.id}"></td>
+            <td th:text="${client.nom}" class="client-nom"></td>
+            <td th:text="${client.email}" class="client-email"></td>
+            <td th:text="${client.telephone}"></td>
+            <td>
+                    <span th:text="${client.statut}"
+                          th:classappend="${client.statut.name() == 'ACTIF'} ? 'badge-actif' : 'badge-inactif'"
+                          class="badge"></span>
+            </td>
+            <td>
+                <a th:href="@{/clients/{id}/edit(id=${client.id})}" class="btn btn-edit">Modifier</a>
+                <form th:action="@{/clients/{id}/delete(id=${client.id})}" method="post" style="display:inline">
+                    <button type="submit" class="btn btn-delete"
+                            onclick="return confirm('Supprimer ce client ?')">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(clients)}">
+            <td colspan="6" style="text-align:center" id="empty-message">Aucun client trouvé</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
