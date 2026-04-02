@@ -1,5 +1,8 @@
 package org.example.clientservice.controller;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.example.clientservice.models.Client;
 import org.example.clientservice.repository.ClientRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +27,11 @@ class ClientRestControllerTest {
 
     @BeforeEach
     void setUp() {
+        System.out.println(">>> Démarrage du test sur le port : " + port);
         RestAssured.port = port;
+        // Correction : pas de slash à la fin du basePath
         RestAssured.basePath = "/api/clients";
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         repository.deleteAll();
     }
 
@@ -33,8 +39,10 @@ class ClientRestControllerTest {
     @Order(1)
     @DisplayName("GET / — liste vide au départ")
     void getAll_returnsEmptyList() {
-        given().contentType(ContentType.JSON)
-                .when().get()
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get() // Appelle /api/clients
                 .then()
                 .statusCode(200)
                 .body("$", hasSize(0));
@@ -53,8 +61,11 @@ class ClientRestControllerTest {
             }
             """;
 
-        given().contentType(ContentType.JSON).body(body)
-                .when().post()
+        given()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .post()
                 .then()
                 .statusCode(201)
                 .body("id", notNullValue())
@@ -83,8 +94,11 @@ class ClientRestControllerTest {
             }
             """;
 
-        given().contentType(ContentType.JSON).body(body)
-                .when().post()
+        given()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .post()
                 .then()
                 .statusCode(409)
                 .body("error", containsString("yanick@test.ma"));
@@ -102,8 +116,11 @@ class ClientRestControllerTest {
             }
             """;
 
-        given().contentType(ContentType.JSON).body(body)
-                .when().post()
+        given()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .post()
                 .then()
                 .statusCode(400);
     }
@@ -120,7 +137,9 @@ class ClientRestControllerTest {
         Long id = repository.save(c).getId();
 
         given()
-                .when().get("/" + id)
+                .pathParam("id", id)
+                .when()
+                .get("/{id}") // Utilisation propre des paramètres
                 .then()
                 .statusCode(200)
                 .body("nom", equalTo("Sara Benali"));
@@ -131,7 +150,9 @@ class ClientRestControllerTest {
     @DisplayName("GET /{id} — id inexistant retourne 404")
     void getById_notFound_returns404() {
         given()
-                .when().get("/9999")
+                .pathParam("id", 9999)
+                .when()
+                .get("/{id}")
                 .then()
                 .statusCode(404)
                 .body("error", containsString("9999"));
@@ -157,8 +178,12 @@ class ClientRestControllerTest {
             }
             """;
 
-        given().contentType(ContentType.JSON).body(body)
-                .when().put("/" + id)
+        given()
+                .contentType(ContentType.JSON)
+                .pathParam("id", id)
+                .body(body)
+                .when()
+                .put("/{id}")
                 .then()
                 .statusCode(200)
                 .body("nom", equalTo("New Name"))
@@ -176,13 +201,19 @@ class ClientRestControllerTest {
         c.setStatut(Client.StatutClient.ACTIF);
         Long id = repository.save(c).getId();
 
+        // 1. Suppression
         given()
-                .when().delete("/" + id)
+                .pathParam("id", id)
+                .when()
+                .delete("/{id}")
                 .then()
                 .statusCode(204);
 
+        // 2. Vérification
         given()
-                .when().get("/" + id)
+                .pathParam("id", id)
+                .when()
+                .get("/{id}")
                 .then()
                 .statusCode(404);
     }

@@ -28,28 +28,48 @@ public class ClientDTO {
 
     private Client.StatutClient statut;
 
-    public static ClientDTO fromEntity(Client c) {
-        return ClientDTO.builder()
-                .id(c.getId())
-                .nom(c.getNom())
-                .email(c.getEmail())
-                .telephone(c.getTelephone())
-                .statut(c.getStatut())
-                .build();
 
+    public String getEmail(){
+        return this.email;
+    }
+    public String getNom(){
+        return this.nom;
+    }
 
+    public String getTelephone(){
+        return this.telephone;
+    }
+
+    public Client.StatutClient getStatut(){
+        return this.statut;
     }
 
 
-    public Client toEntity() {
+public static ClientDTO fromEntity(Client c){
 
-        return Client.builder()
-                .nom(this.nom)
-                .email(this.email)
-                .telephone(this.telephone)
-                .statut(this.statut != null ? this.statut : Client.StatutClient.ACTIF)
-                .build();
-    }
+    return ClientDTO.builder()
+            .id(c.getId())
+                    .nom(c.getNom())
+                            .email(c.getEmail())
+                                    .telephone(c.getTelephone())
+                                            .statut(c.getStatut()).build();
+
+
+}
+
+public Client toEntity(){
+    return Client.builder()
+            .nom(this.nom)
+            .email(this.email)
+            .telephone(this.telephone)
+            .statut(this.statut == null ? Client.StatutClient.ACTIF : this.statut).build();
+}
+
+
+
+
+
+
 
 
 

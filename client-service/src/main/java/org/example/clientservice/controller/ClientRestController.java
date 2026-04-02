@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/clients")
 public class ClientRestController {
-
     private final ClientService service;
 
     public ClientRestController(ClientService service) {
