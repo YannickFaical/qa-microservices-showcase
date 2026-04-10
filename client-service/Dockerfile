@@ -1,4 +1,4 @@
-# Base image avec Java 17
+# Base image avec Java 21
 FROM eclipse-temurin:21-jdk-alpine
 
 # Argument pour le jar
@@ -8,7 +8,7 @@ ARG JAR_FILE=target/client-service-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 # Exposer le port de l'application
-EXPOSE 8081
+EXPOSE 8090
 
-# Commande pour lancer l'application
+# Commande pour lancer l'application avec le profil prod
 ENTRYPOINT ["java","-jar","/app.jar","--spring.profiles.active=prod"]
