@@ -31,3 +31,73 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+
+# =========================
+# ENV FILES (SECRETS)
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# JAVA / SPRING BOOT
+# =========================
+target/
+*.jar
+*.war
+*.log
+
+# Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd
+
+# =========================
+# INTELLIJ / IDE
+# =========================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse / VS Code
+.project
+.classpath
+.settings/
+.vscode/
+
+# =========================
+# OS FILES
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# LOGS
+# =========================
+logs/
+
+
+# =========================
+# H2 DATABASE FILES
+# =========================
+*.db
+*.mv.db
+
+# =========================
+# DOCKER
+# =========================
+docker-compose.override.yml
+
+# =========================
+# SPRING BOOT CACHE
+# =========================
+*.pid
+
+# =========================
+# TEMP FILES
+# =========================
+*.tmp
+*.bak
